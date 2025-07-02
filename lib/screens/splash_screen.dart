@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'level_select_screen.dart';
+import 'difficulty_level_screen.dart';
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -25,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const LevelSelectScreen()),
+        MaterialPageRoute(builder: (_) => const DifficultyLevelScreen()),
       );
     });
   }

@@ -10,9 +10,9 @@ class LevelSelectScreen extends StatelessWidget {
       appBar: AppBar(title: const Text("Select Level")),
       body: GridView.builder(
         padding: const EdgeInsets.all(20),
-        itemCount: 20,
+        itemCount: 100,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
+          crossAxisCount: 3,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
