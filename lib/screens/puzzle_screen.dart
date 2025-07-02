@@ -205,27 +205,50 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                           }
                         }
                       },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: tile == null
-                              ? Colors.grey[300]
-                              : (index == hintIndex
-                              ? Colors.yellow[100]
-                              : Colors.white),
-                          border: Border.all(
-                            color: index == hintIndex
-                                ? Colors.orange
-                                : Colors.black12,
-                            width: index == hintIndex ? 5 : 1,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          decoration: BoxDecoration(
+                            color: tile == null
+                                ? Colors.grey[300]
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: index == hintIndex ? Colors.greenAccent : Colors.black12,
+                              width: index == hintIndex ? 4 : 1,
+                            ),
+                            boxShadow: index == hintIndex
+                                ? [
+                              BoxShadow(
+                                color: Colors.greenAccent.withOpacity(0.6),
+                                blurRadius: 12,
+                                spreadRadius: 2,
+                              )
+                            ]
+                                : [],
+                          ),
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              if (tile != null)
+                                CustomPaint(
+                                  painter: TilePainter(tile, fullImage!, puzzleSize),
+                                ),
+                              if (index == hintIndex)
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.orangeAccent.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(
+                                    Icons.lightbulb_outline,
+                                    color: Colors.white,
+                                    size: 36,
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
-                        child: tile == null
-                            ? const SizedBox.shrink()
-                            : CustomPaint(
-                          painter: TilePainter(
-                              tile, fullImage!, puzzleSize),
-                        ),
-                      ),
+
                     );
                   },
                 ),
