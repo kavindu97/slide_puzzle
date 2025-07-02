@@ -83,7 +83,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            title: const Text("🎉 You Win!"),
+            title: const Text("🎉 You Win! 🎉"),
             content: Text("You solved the puzzle in $moveCount moves."),
             actions: [
               TextButton(
