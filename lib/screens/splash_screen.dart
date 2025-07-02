@@ -34,13 +34,13 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo,
+      backgroundColor: Colors.white,
       body: Center(
         child: ScaleTransition(
           scale: _animation,
           child: const Text(
             'Sliding Puzzle',
-            style: TextStyle(fontSize: 36, color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 36, color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
       ),
