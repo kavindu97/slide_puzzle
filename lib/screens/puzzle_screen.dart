@@ -26,8 +26,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
   }
 
   Future<void> _loadImage() async {
-    final byteData =
-    await rootBundle.load('assets/images/level${widget.level}.jpg');
+    final byteData = await rootBundle.load('assets/images/level${widget.level}.jpg');
     final image = await decodeImageFromList(byteData.buffer.asUint8List());
     setState(() => fullImage = image);
   }
@@ -35,8 +34,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
   void _resetPuzzle() {
     List<int?> newTiles;
     do {
-      newTiles =
-      List<int?>.generate(9, (i) => i < 8 ? i + 1 : null)..shuffle();
+      newTiles = List<int?>.generate(9, (i) => i < 8 ? i + 1 : null)..shuffle();
     } while (!_isSolvable(newTiles));
     setState(() {
       tiles = newTiles;
@@ -112,8 +110,14 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bgColor = const Color(0xFFE0E5EC);
     return Scaffold(
-      appBar: AppBar(title: Text("Level ${widget.level}")),
+      backgroundColor: bgColor,
+      appBar: AppBar(
+        title: Text("Level ${widget.level}"),
+        backgroundColor: bgColor,
+        elevation: 0,
+      ),
       body: fullImage == null
           ? const Center(child: CircularProgressIndicator())
           : LayoutBuilder(
@@ -123,57 +127,52 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
 
           return Column(
             children: [
-              // Scrollable controls
-              SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Column(
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Moves: $moveCount",
-                              style: const TextStyle(fontSize: 18)),
-                          Row(
-                            children: [
-                              ElevatedButton.icon(
-                                onPressed: _resetPuzzle,
-                                icon: const Icon(Icons.shuffle),
-                                label: const Text("Shuffle"),
-                              ),
-                              const SizedBox(width: 8),
-                              ElevatedButton.icon(
-                                onPressed: _showHint,
-                                icon: const Icon(Icons.lightbulb_outline),
-                                label: const Text("Hint"),
-                              ),
-                            ],
+                    Text("Moves: $moveCount",
+                        style: const TextStyle(fontSize: 18)),
+                    Row(
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: _resetPuzzle,
+                          icon: const Icon(Icons.shuffle),
+                          label: const Text("Shuffle"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey[300],
+                            foregroundColor: Colors.black87,
                           ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      height: 100,
-                      width: 100,
-                      child: RawImage(image: fullImage),
-                    ),
-                    const SizedBox(height: 20),
+                        ),
+                        const SizedBox(width: 8),
+                        ElevatedButton.icon(
+                          onPressed: _showHint,
+                          icon: const Icon(Icons.lightbulb_outline),
+                          label: const Text("Hint"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow[100],
+                            foregroundColor: Colors.black87,
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
-
-              // Puzzle grid (not scrollable)
               SizedBox(
                 width: puzzleSize,
                 height: puzzleSize,
                 child: GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: 9,
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
                   gridDelegate:
                   const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 2,
+                  ),
                   itemBuilder: (context, index) {
                     final tile = tiles[index];
                     return Listener(
@@ -188,7 +187,9 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                         double dy = event.delta.dy;
 
                         if (dx.abs() > dy.abs()) {
-                          if (dx > 4 && col < 2 && index + 1 == emptyIndex) {
+                          if (dx > 4 &&
+                              col < 2 &&
+                              index + 1 == emptyIndex) {
                             _onTileTap(index);
                           } else if (dx < -4 &&
                               col > 0 &&
@@ -196,7 +197,9 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                             _onTileTap(index);
                           }
                         } else {
-                          if (dy > 4 && row < 2 && index + 3 == emptyIndex) {
+                          if (dy > 4 &&
+                              row < 2 &&
+                              index + 3 == emptyIndex) {
                             _onTileTap(index);
                           } else if (dy < -4 &&
                               row > 0 &&
@@ -205,55 +208,68 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
                           }
                         }
                       },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          decoration: BoxDecoration(
-                            color: tile == null
-                                ? Colors.grey[300]
-                                : Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: index == hintIndex ? Colors.greenAccent : Colors.black12,
-                              width: index == hintIndex ? 4 : 1,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        decoration: BoxDecoration(
+                          color: tile == null
+                              ? bgColor
+                              : const Color(0xFFE0E5EC),
+                          borderRadius: BorderRadius.circular(6),
+                          boxShadow: tile == null
+                              ? []
+                              : [
+                            const BoxShadow(
+                              color: Colors.blueGrey,
+                              offset: Offset(-5, -5),
+                              blurRadius: 10,
                             ),
-                            boxShadow: index == hintIndex
-                                ? [
-                              BoxShadow(
-                                color: Colors.greenAccent.withOpacity(0.6),
-                                blurRadius: 12,
-                                spreadRadius: 2,
-                              )
-                            ]
-                                : [],
-                          ),
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              if (tile != null)
-                                CustomPaint(
-                                  painter: TilePainter(tile, fullImage!, puzzleSize),
-                                ),
-                              if (index == hintIndex)
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.orangeAccent.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Icon(
-                                    Icons.lightbulb_outline,
-                                    color: Colors.white,
-                                    size: 36,
-                                  ),
-                                ),
-                            ],
-                          ),
+                            BoxShadow(
+                              color: Colors.grey.shade500,
+                              offset: const Offset(5, 5),
+                              blurRadius: 10,
+                            ),
+                          ],
                         ),
-
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            if (tile != null)
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(6),
+                                child: CustomPaint(
+                                  painter: TilePainter(
+                                      tile, fullImage!, puzzleSize),
+                                ),
+                              ),
+                            if (index == hintIndex)
+                              Container(
+                                decoration: BoxDecoration(
+                                  color:
+                                  Colors.orange.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: const Icon(
+                                  Icons.lightbulb_outline,
+                                  color: Colors.white,
+                                  size: 40,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),
               ),
               const SizedBox(height: 20),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5, // 50% of screen width
+                height: MediaQuery.of(context).size.width * 0.5,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: RawImage(image: fullImage),
+                ),
+              ),
             ],
           );
         },
