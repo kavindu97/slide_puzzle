@@ -87,7 +87,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(true); // Return true to indicate win
                 },
                 child: const Text("OK"),
               )
@@ -263,7 +263,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5, // 50% of screen width
+                width: MediaQuery.of(context).size.width * 0.5,
                 height: MediaQuery.of(context).size.width * 0.5,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),

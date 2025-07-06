@@ -1,8 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'puzzle_screen.dart';
 
-class LevelSelectScreen extends StatelessWidget {
+class LevelSelectScreen extends StatefulWidget {
   const LevelSelectScreen({super.key});
+
+  @override
+  State<LevelSelectScreen> createState() => _LevelSelectScreenState();
+}
+
+class _LevelSelectScreenState extends State<LevelSelectScreen> {
+  List<bool> unlockedLevels = List.generate(50, (index) => index == 0); // First level unlocked by default
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUnlockedLevels();
+  }
+
+  Future<void> _loadUnlockedLevels() async {
+    final prefs = await SharedPreferences.getInstance();
+    final unlocked = prefs.getStringList('unlockedLevels') ?? ['1'];
+    setState(() {
+      unlockedLevels = List.generate(50, (index) => unlocked.contains('${index + 1}'));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +37,7 @@ class LevelSelectScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: GridView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8), // General padding
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         itemCount: 50,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
@@ -23,6 +45,7 @@ class LevelSelectScreen extends StatelessWidget {
         ),
         itemBuilder: (context, index) {
           int level = index + 1;
+          bool isUnlocked = unlockedLevels[index];
 
           final isFirstInRow = index % 3 == 0;
           final isLastInRow = index % 3 == 2;
@@ -35,17 +58,34 @@ class LevelSelectScreen extends StatelessWidget {
               bottom: 6,
             ),
             child: GestureDetector(
-              onTap: () {
-                Navigator.push(
+              onTap: isUnlocked
+                  ? () async {
+                final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => PuzzleScreen(level: level),
                   ),
                 );
-              },
+                if (result == true && level < 50) {
+                  setState(() {
+                    unlockedLevels[level] = true; // Unlock next level
+                  });
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setStringList(
+                    'unlockedLevels',
+                    unlockedLevels
+                        .asMap()
+                        .entries
+                        .where((entry) => entry.value)
+                        .map((entry) => '${entry.key + 1}')
+                        .toList(),
+                  );
+                }
+              }
+                  : null,
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE0E5EC),
+                  color: isUnlocked ? const Color(0xFFE0E5EC) : Colors.grey[400],
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: const [
                     BoxShadow(
@@ -65,10 +105,10 @@ class LevelSelectScreen extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   "Level $level",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: Colors.black87,
+                    color: isUnlocked ? Colors.black87 : Colors.grey[600],
                   ),
                 ),
               ),
