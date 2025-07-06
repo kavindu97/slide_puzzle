@@ -9,10 +9,10 @@ class FourPuzzleScreen extends StatefulWidget {
   const FourPuzzleScreen({super.key, required this.level});
 
   @override
-  State<FourPuzzleScreen> createState() => _PuzzleScreenState();
+  State<FourPuzzleScreen> createState() => _FourPuzzleScreenState();
 }
 
-class _PuzzleScreenState extends State<FourPuzzleScreen> {
+class _FourPuzzleScreenState extends State<FourPuzzleScreen> {
   static const int gridSize = 4;
   late List<int?> tiles;
   ui.Image? fullImage;
@@ -52,7 +52,8 @@ class _PuzzleScreenState extends State<FourPuzzleScreen> {
         if (flattened[i] > flattened[j]) inversions++;
       }
     }
-    return inversions % 2 == 0;
+    int emptyRowFromBottom = gridSize - (tiles.indexOf(null) ~/ gridSize);
+    return (inversions + emptyRowFromBottom) % 2 == 0;
   }
 
   void _onTileTap(int index) {
@@ -81,14 +82,65 @@ class _PuzzleScreenState extends State<FourPuzzleScreen> {
       Future.delayed(const Duration(milliseconds: 300), () {
         showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (_) => AlertDialog(
             title: const Text("🎉 You Win! 🎉"),
-            content: Text("You solved the puzzle in $moveCount moves."),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("You solved the puzzle in $moveCount moves."),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: 150,
+                  height: 150,
+                  child: GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: gridSize * gridSize,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: gridSize,
+                      crossAxisSpacing: 2,
+                      mainAxisSpacing: 2,
+                    ),
+                    itemBuilder: (context, index) {
+                      final tile = isWinning[index];
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: tile == null ? const Color(0xFFE0E5EC) : const Color(0xFFE0E5EC),
+                          borderRadius: BorderRadius.circular(4),
+                          boxShadow: tile == null
+                              ? []
+                              : [
+                            const BoxShadow(
+                              color: Colors.blueGrey,
+                              offset: Offset(-2, -2),
+                              blurRadius: 4,
+                            ),
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: const Offset(2, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: tile != null && fullImage != null
+                            ? ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: CustomPaint(
+                            painter: TilePainter(tile, fullImage!, 150, gridSize),
+                          ),
+                        )
+                            : null,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(true);
                 },
                 child: const Text("OK"),
               )
@@ -156,7 +208,7 @@ class _PuzzleScreenState extends State<FourPuzzleScreen> {
                         //   ),
                         // ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -213,7 +265,7 @@ class _PuzzleScreenState extends State<FourPuzzleScreen> {
                               blurRadius: 10,
                             ),
                             BoxShadow(
-                              color: Colors.grey.shade500,
+                              color: Colors.grey,
                               offset: const Offset(5, 5),
                               blurRadius: 10,
                             ),
@@ -230,7 +282,6 @@ class _PuzzleScreenState extends State<FourPuzzleScreen> {
                                 ),
                               ),
                             if (index == hintIndex)
-
                               Container(
                                 decoration: BoxDecoration(
                                   color: Colors.orange.withOpacity(0.2),

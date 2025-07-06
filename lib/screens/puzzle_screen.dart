@@ -80,15 +80,67 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
       Future.delayed(const Duration(milliseconds: 300), () {
         showDialog(
           context: context,
-          barrierDismissible: false, // Disable background interaction
+          barrierDismissible: false,
           builder: (_) => AlertDialog(
             title: const Text("🎉 You Win! 🎉"),
-            content: Text("You solved the puzzle in $moveCount moves."),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("You solved the puzzle in $moveCount moves."),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: 150,
+                  height: 150,
+                  child: GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 9,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 2,
+                      mainAxisSpacing: 2,
+                    ),
+                    itemBuilder: (context, index) {
+                      final tile = isWinning[index];
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: tile == null
+                              ? const Color(0xFFE0E5EC)
+                              : const Color(0xFFE0E5EC),
+                          borderRadius: BorderRadius.circular(4),
+                          boxShadow: tile == null
+                              ? []
+                              : [
+                            const BoxShadow(
+                              color: Colors.blueGrey,
+                              offset: Offset(-2, -2),
+                              blurRadius: 4,
+                            ),
+                            BoxShadow(
+                              color: Colors.grey.shade500,
+                              offset: const Offset(2, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: tile != null && fullImage != null
+                            ? ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: CustomPaint(
+                            painter: TilePainter(tile, fullImage!, 150),
+                          ),
+                        )
+                            : null,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pop(true); // Return true to indicate win
+                  Navigator.of(context).pop(true);
                 },
                 child: const Text("OK"),
               )
