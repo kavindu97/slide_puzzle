@@ -446,25 +446,25 @@ class _PuzzleScreenState extends State<FivePuzzleScreen> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        ElevatedButton.icon(
-                          onPressed: _showHint,
-                          icon: const Icon(Icons.lightbulb_outline),
-                          label: const Text("Hint"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.yellow[100],
-                            foregroundColor: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        ElevatedButton.icon(
-                          onPressed: _setTestPuzzle,
-                          icon: const Icon(Icons.bug_report),
-                          label: const Text("Test"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey[300],
-                            foregroundColor: Colors.black87,
-                          ),
-                        ),
+                        // ElevatedButton.icon(
+                        //   onPressed: _showHint,
+                        //   icon: const Icon(Icons.lightbulb_outline),
+                        //   label: const Text("Hint"),
+                        //   style: ElevatedButton.styleFrom(
+                        //     backgroundColor: Colors.yellow[100],
+                        //     foregroundColor: Colors.black87,
+                        //   ),
+                        // ),
+                        // const SizedBox(width: 8),
+                        // ElevatedButton.icon(
+                        //   onPressed: _setTestPuzzle,
+                        //   icon: const Icon(Icons.bug_report),
+                        //   label: const Text("Test"),
+                        //   style: ElevatedButton.styleFrom(
+                        //     backgroundColor: Colors.grey[300],
+                        //     foregroundColor: Colors.black87,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],

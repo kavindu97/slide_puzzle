@@ -146,15 +146,15 @@ class _PuzzleScreenState extends State<FourPuzzleScreen> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        ElevatedButton.icon(
-                          onPressed: _showHint,
-                          icon: const Icon(Icons.lightbulb_outline),
-                          label: const Text("Hint"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.yellow[100],
-                            foregroundColor: Colors.black87,
-                          ),
-                        ),
+                        // ElevatedButton.icon(
+                        //   onPressed: _showHint,
+                        //   icon: const Icon(Icons.lightbulb_outline),
+                        //   label: const Text("Hint"),
+                        //   style: ElevatedButton.styleFrom(
+                        //     backgroundColor: Colors.yellow[100],
+                        //     foregroundColor: Colors.black87,
+                        //   ),
+                        // ),
                       ],
                     )
                   ],
