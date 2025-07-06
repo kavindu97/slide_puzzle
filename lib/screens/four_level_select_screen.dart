@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'five_puzzle_screen.dart';
+import 'four_puzzle_screen.dart';
 import 'puzzle_screen.dart';
 
-class LevelSelectScreen extends StatelessWidget {
-  const LevelSelectScreen({super.key});
+class FourLevelSelectScreen extends StatelessWidget {
+  const FourLevelSelectScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class LevelSelectScreen extends StatelessWidget {
       ),
       body: GridView.builder(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8), // General padding
-        itemCount: 50,
+        itemCount: 100,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: 1,
@@ -39,7 +41,7 @@ class LevelSelectScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => PuzzleScreen(level: level),
+                    builder: (_) => FourPuzzleScreen(level: level),
                   ),
                 );
               },

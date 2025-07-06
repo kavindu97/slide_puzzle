@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sliding_puzzle/screens/five_level_select_screen.dart';
+import 'four_level_select_screen.dart';
 import 'level_select_screen.dart';
 
 class DifficultyLevelScreen extends StatelessWidget {
@@ -40,8 +42,9 @@ class DifficultyLevelScreen extends StatelessWidget {
               title: "4x4",
               subtitle: "Medium",
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("4x4 coming soon!")),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const FourLevelSelectScreen()),
                 );
               },
             ),
@@ -51,8 +54,9 @@ class DifficultyLevelScreen extends StatelessWidget {
               title: "5x5",
               subtitle: "Hardcore!",
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("5x5 coming soon!")),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const FiveLevelSelectScreen()),
                 );
               },
             ),
