@@ -52,11 +52,13 @@ class DifficultyLevelScreen extends StatelessWidget {
             _buildNeuCard(
               context,
               title: "5x5",
-              subtitle: "Hardcore!",
+              subtitle: "Coming soon Hardcore!",
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const FiveLevelSelectScreen()),
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("5x5 mode is coming soon!"),
+                    duration: Duration(seconds: 2),
+                  ),
                 );
               },
             ),
