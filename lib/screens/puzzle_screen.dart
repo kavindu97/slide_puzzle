@@ -80,6 +80,7 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
       Future.delayed(const Duration(milliseconds: 300), () {
         showDialog(
           context: context,
+          barrierDismissible: false, // Disable background interaction
           builder: (_) => AlertDialog(
             title: const Text("🎉 You Win! 🎉"),
             content: Text("You solved the puzzle in $moveCount moves."),
