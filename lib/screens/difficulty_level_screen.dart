@@ -1,14 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sliding_puzzle/screens/five_level_select_screen.dart';
 import 'four_level_select_screen.dart';
 import 'level_select_screen.dart';
 
-class DifficultyLevelScreen extends StatelessWidget {
+class DifficultyLevelScreen extends StatefulWidget {
   const DifficultyLevelScreen({super.key});
 
   @override
+  State<DifficultyLevelScreen> createState() => _DifficultyLevelScreenState();
+}
+
+class _DifficultyLevelScreenState extends State<DifficultyLevelScreen> {
+  late BannerAd _bannerAd;
+  bool _isBannerAdReady = false;
+  @override
+  void initState() {
+    super.initState();
+    _bannerAd = BannerAd(
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // ✅ Reuse your test or real ID
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          debugPrint('Banner failed to load: $error');
+          ad.dispose();
+        },
+      ),
+    )..load();
+  }
+  @override
+  void dispose() {
+    _bannerAd.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final backgroundColor = const Color(0xFFCAD6E2); // Light blue-gray
+    final backgroundColor = const Color(0xFFCAD6E2);
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
@@ -65,6 +99,12 @@ class DifficultyLevelScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: _isBannerAdReady
+          ? SizedBox(
+        height: _bannerAd.size.height.toDouble(),
+        child: AdWidget(ad: _bannerAd),
+      )
+          : null,
     );
   }
 

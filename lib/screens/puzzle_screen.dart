@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:collection/collection.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class PuzzleScreen extends StatefulWidget {
   final int level;
@@ -13,6 +14,8 @@ class PuzzleScreen extends StatefulWidget {
 }
 
 class _PuzzleScreenState extends State<PuzzleScreen> {
+  InterstitialAd? _interstitialAd;
+  bool _isInterstitialAdReady = false;
   late List<int?> tiles;
   ui.Image? fullImage;
   int moveCount = 0;
@@ -23,8 +26,23 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
     super.initState();
     _resetPuzzle();
     _loadImage();
+    _loadInterstitialAd(); // Load ad at init
   }
-
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          _interstitialAd = ad;
+          _isInterstitialAdReady = true;
+        },
+        onAdFailedToLoad: (error) {
+          print('InterstitialAd failed to load: $error');
+        },
+      ),
+    );
+  }
   Future<void> _loadImage() async {
     final byteData = await rootBundle.load('assets/images/level${widget.level}.jpg');
     final image = await decodeImageFromList(byteData.buffer.asUint8List());
@@ -139,6 +157,14 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
             actions: [
               TextButton(
                 onPressed: () {
+                  if (_isInterstitialAdReady) {
+                    _interstitialAd?.show();
+                    _interstitialAd?.dispose();
+                    _interstitialAd = null;
+                    _isInterstitialAdReady = false;
+                    _loadInterstitialAd(); // Prepare next
+                  }
+
                   Navigator.of(context).pop();
                   Navigator.of(context).pop(true);
                 },

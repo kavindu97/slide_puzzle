@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'four_puzzle_screen.dart';
 
@@ -11,13 +12,32 @@ class FourLevelSelectScreen extends StatefulWidget {
 
 class _FourLevelSelectScreenState extends State<FourLevelSelectScreen> {
   List<bool> unlockedLevels = List.generate(50, (index) => index == 0); // Only level 1 unlocked initially
-
+  late BannerAd _bannerAd;
+  bool _isBannerAdReady = false;
   @override
   void initState() {
     super.initState();
     _loadUnlockedLevels();
-  }
 
+    _bannerAd = BannerAd(
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Replace with real ID in production
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          ad.dispose();
+          debugPrint('BannerAd failed to load: $error');
+        },
+      ),
+    );
+
+    _bannerAd.load(); // Load after initialization
+  }
   Future<void> _loadUnlockedLevels() async {
     final prefs = await SharedPreferences.getInstance();
     final unlocked = prefs.getStringList('unlockedLevels4x4') ?? ['1']; // Use distinct key for 4x4
@@ -116,6 +136,13 @@ class _FourLevelSelectScreenState extends State<FourLevelSelectScreen> {
           );
         },
       ),
+      bottomNavigationBar: _isBannerAdReady
+          ? SizedBox(
+        height: _bannerAd.size.height.toDouble(),
+        width: _bannerAd.size.width.toDouble(),
+        child: AdWidget(ad: _bannerAd),
+      )
+          : null,
     );
   }
 }
