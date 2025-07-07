@@ -39,6 +39,7 @@ dependencies:
   shared_preferences: ^2.0.0
   google_mobile_ads: ^5.2.0 # Check for latest version
   change_app_package_name: ^1.5.0
+  flutter_launcher_icons: ^0.13.1
 
 
 dev_dependencies:
@@ -115,6 +116,14 @@ flutter:
    - assets/images/level48.jpg
    - assets/images/level49.jpg
    - assets/images/level50.jpg
+     
+
+
+flutter_icons:
+ android: true
+ ios: true
+ image_path: "assets/images/slide_puzzle_logo.png"  # <-- Path to your icon image
+
 #   - assets/images/level51.jpg
 #   - assets/images/level52.jpg
 #   - assets/images/level53.jpg
