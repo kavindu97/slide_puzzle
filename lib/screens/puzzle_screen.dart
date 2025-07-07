@@ -30,7 +30,8 @@ class _PuzzleScreenState extends State<PuzzleScreen> {
   }
   void _loadInterstitialAd() {
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+      //adUnitId: 'ca-app-pub-3940256099942544/1033173712',//chnage this to live
+        adUnitId : 'ca-app-pub-7234661059951095/1946835973',
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
