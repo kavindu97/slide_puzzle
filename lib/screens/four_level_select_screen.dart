@@ -20,7 +20,8 @@ class _FourLevelSelectScreenState extends State<FourLevelSelectScreen> {
     _loadUnlockedLevels();
 
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Replace with real ID in production
+      // adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Replace with real ID in production
+      adUnitId:'ca-app-pub-7234661059951095/5511225206',
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
